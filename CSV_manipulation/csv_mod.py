@@ -33,6 +33,17 @@ def get_path():
     return file_path
 
 
+def get_column_range(value, rows):
+    if get_column_type(value) in (float, int, bool):
+        max_val = max(rows)
+        min_val = min(rows)
+        col_range = f"{min_val} - {max_val}"
+    else:
+        col_range = "Not applicable"
+
+    return col_range
+
+
 def get_column_type(value):
     try:
         datetime_obj = datetime.strptime(value, '%d.%m.%Y')
@@ -64,7 +75,8 @@ def show_file(file_path):
         for col_name, col_value in zip(column_names, column_row):
             col_type = get_column_type(col_value)
             col_example = col_value
-            columns.append((col_name, col_type, col_example))
+            col_range = get_column_range(col_value, rows)
+            columns.append((col_name, col_type, col_example, col_range))
 
         print(column_names)
         print(column_row)
