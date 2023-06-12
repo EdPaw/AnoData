@@ -12,7 +12,6 @@ def process_data(choices):
     for column in choices:
         modified_value = None
         column_name, data_type, data_range_from, data_range_to, modification = column
-        modified_data = [column_name]
 
         if data_type == 'Int':
             if modification == "Remain as is":
