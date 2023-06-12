@@ -1,5 +1,6 @@
-import csv_mod as c
+import csv_entry as c
 import gui as g
+import csv
 
 
 def main():
