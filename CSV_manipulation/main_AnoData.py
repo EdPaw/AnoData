@@ -1,12 +1,9 @@
-import csv_entry as c
+import csv_entry as c_e
 import gui as g
-import csv
 
 
 def main():
-    c_path = c.check_if_file_correct()
-    columns = c.show_file(c_path)
-    g.create_gui(columns)
+    g.StartScreen()
 
 
 if __name__ == '__main__':

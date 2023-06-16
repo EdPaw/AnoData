@@ -2,46 +2,72 @@ import csv
 import random
 
 
-def calculate_rows():
-    pass
+class CSVProcessor:
+    def __init__(self, file_path):
+        self.file_path = file_path
 
+    def calculate_rows(self):
+        rows = -1
+        with open(self.file_path, "r", encoding='utf-8') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                rows += 1
 
-def process_data(choices):
-    modified_data = []
+        return rows
 
-    for column in choices:
-        modified_value = None
-        column_name, data_type, data_range_from, data_range_to, modification = column
+    def original_file_content(self):
+        with open(self.file_path, 'r', encoding='utf-8') as csvfile:
+            reader = csv.reader(csvfile, delimiter=';')
+            rows = list(reader)
 
-        if data_type == 'Int':
-            if modification == "Remain as is":
-                modified_value = 2
-            elif modification == "Draw from data range":
-                modified_value = random.randint(int(data_range_from), int(data_range_to))
+        return rows
 
-        elif data_type == 'Float':
-            if modification == "Remain as is":
-                modified_value = 1.0
-            elif modification == "Draw from data range":
-                modified_value = random.uniform(float(data_range_from), float(data_range_to))
+    def process_data(self, column_choices):
+        modified_data = []
+        column_names = [column[0] for column in column_choices]
+        num_rows = self.calculate_rows()
+        original = self.original_file_content()
 
-        elif data_type == 'String':
-            if modification == "Remain as is":
-                modified_value = "abc"
-            elif modification == "Draw from data range":
-                modified_value = 2
+        for i in range(num_rows):
+            row_data = []
+            for column in column_choices:
+                column_type = column[1]
+                data_range_from = column[2]
+                data_range_to = column[3]
+                string_range_to = column[4]
+                string_range_to = string_range_to.split(',')
+                modification = column[5]
 
-        modified_data.append(modified_value)
+                if modification == "Remain as is" or column_type == "Geo":
+                    row_data.append(original[i + 1][column_names.index(column[0])])
 
-    print(modified_data)
-    return modified_data
+                elif modification == "Draw from data range":
+                    if column_type == "Int":
+                        random_value = random.randint(int(float(data_range_from.replace(',', '.'))),
+                                                      int(float(data_range_to.replace(',', '.'))))
+                        row_data.append(str(random_value))
 
+                    elif column_type == "Float":
+                        random_value = random.uniform(float(data_range_from.replace(',', '.')),
+                                                      float(data_range_to.replace(',', '.')))
+                        row_data.append(str(random_value))
 
-def create_new_csv(modified_data):
-    # Creating new CSV file with modified data
-    with open("modified_data.csv", "w", newline="") as csvfile:
-        writer = csv.writer(csvfile)
-        for row in modified_data:
-            writer.writerow([row])
+                    elif column_type == "Bool":
+                        random_value = str(random.choice([True, False]))
+                        row_data.append(random_value)
 
-    return "modified_data.csv"
+                    elif column_type == "String":
+                        random_value = str(random.choice(string_range_to))
+                        row_data.append(random_value)
+
+            modified_data.append(row_data)
+
+        return [column_names] + modified_data
+
+    @staticmethod
+    def create_new_csv(modified_data):
+        with open("modified_data.csv", "w", newline="", encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile, delimiter=';')
+            writer.writerows(modified_data)
+
+        return "modified_data.csv"
