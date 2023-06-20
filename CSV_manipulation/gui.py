@@ -21,8 +21,13 @@ class StartScreen:
         canvas_center_x = 400 // 2
         canvas_center_y = 300 // 2
 
+        # Add label above the button
+        label = tk.Label(self.root, text="Program to anonymize your data. \nSelect CSV and input parameters.",
+                         background="#d7e9e9", font=("Calibri", 12), relief="sunken", width=30, height=3)
+        label.place(x=canvas_center_x, y=canvas_center_y-80, anchor="center")
+
         # Add "Select CSV" button
-        select_csv_button = ttk.Button(self.root, text="Select CSV", command=self.handle_select_csv)
+        select_csv_button = ttk.Button(self.root, text="Select CSV", command=self.handle_select_csv, width=30)
         select_csv_button.place(x=canvas_center_x, y=canvas_center_y, anchor="center")
 
         self.analyzer = None

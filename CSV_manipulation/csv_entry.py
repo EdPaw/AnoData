@@ -36,33 +36,61 @@ class CSVAnalyzer:
         return file_path
 
     def get_column_range(self, column_values):
-        column_type = self.get_column_type(column_values[0])
+        column_type = self.get_column_type(column_values[0], column_values)
 
-        if column_type in (float, int, bool):
+        if column_type == str:
+            col_range = "Not applicable#Not applicable"
+
+        elif column_type == int:
+            # Just in case of such lists: ['0', '0', '0', '0,45', '0,2', '0', '0', '0,2', '0,2', '0']
+            column_values = [float(value.replace(',', '.')) for value in column_values]
+            column_values = list(map(int, column_values))
             max_val = max(column_values)
             min_val = min(column_values)
-            col_range = f"{min_val}:{max_val}"
+            col_range = f"{min_val}#{max_val}"
+
+        elif column_type == float:
+            column_values = [float(value.replace(',', '.')) for value in column_values]
+            column_values = list(map(float, column_values))
+            max_val = max(column_values)
+            min_val = min(column_values)
+            col_range = f"{min_val}#{max_val}"
+
+        elif column_type == datetime:
+            column_values = [datetime.strptime(value, "%d.%m.%Y") for value in column_values]
+            if column_values:
+                max_val = max(column_values)
+                min_val = min(column_values)
+                col_range = f"{min_val}#{max_val}"
+                print(col_range)
+
+        elif column_type == bool:
+            max_val = max(column_values)
+            min_val = min(column_values)
+            col_range = f"{min_val}#{max_val}"
         else:
-            col_range = "Not applicable:Not applicable"
+            col_range = "Not applicable#Not applicable"
 
         return col_range
 
     @staticmethod
-    def get_column_type(value):
+    def get_column_type(value, column_values):
         try:
             datetime_obj = datetime.strptime(value, '%d.%m.%Y')
             return type(datetime_obj)
         except ValueError:
             pass
-        if '.' in value or ',' in value:
+
+        if all(value.isdigit() or value.lstrip('-').isdigit() for value in column_values):
+            return int
+        else:
             try:
-                float(value.replace(',', '.'))
-                return float
+                if all(isinstance(float(value.replace(',', '.')), float) for value in column_values):
+                    return float
             except ValueError:
                 pass
-        elif value.isdigit():
-            return int
-        elif value.lower() in ['true', 'false']:
+
+        if value.lower() in ['true', 'false']:
             return bool
         else:
             return str
@@ -79,10 +107,11 @@ class CSVAnalyzer:
 
             for col_index, col_name in enumerate(column_names):
                 column_values = [row[col_index] for row in data_rows]
-                col_type = self.get_column_type(column_values[0])
+                print(column_values)
+                col_type = self.get_column_type(column_values[0], column_values)
                 col_example = column_values[0]
                 col_range = self.get_column_range(column_values)
-                col_range_from, col_range_to = col_range.split(':')
+                col_range_from, col_range_to = col_range.split('#')
                 columns.append((col_name, col_type, col_example, col_range_from, col_range_to))
 
             print(column_names)
