@@ -10,6 +10,7 @@ class StartScreen:
         self.root = tk.Tk()
         self.root.title("AnoData")
         self.root.geometry("400x300")
+        self.root.iconbitmap("letter-a.ico")
 
         self.canvas = tk.Canvas(self.root, width=400, height=400)
         self.canvas.pack()
@@ -23,11 +24,11 @@ class StartScreen:
 
         # Add label above the button
         label = tk.Label(self.root, text="Program to anonymize your data. \nSelect CSV and input parameters.",
-                         background="#d7e9e9", font=("Calibri", 12), relief="sunken", width=30, height=3)
+                         background="#FFE1ED", font=("Calibri", 12), relief="sunken", width=30, height=3)
         label.place(x=canvas_center_x, y=canvas_center_y-80, anchor="center")
 
         # Add "Select CSV" button
-        select_csv_button = ttk.Button(self.root, text="Select CSV", command=self.handle_select_csv, width=30)
+        select_csv_button = ttk.Button(self.root, text="Select CSV", command=self.handle_select_csv, width=20)
         select_csv_button.place(x=canvas_center_x, y=canvas_center_y, anchor="center")
 
         self.analyzer = None
@@ -135,6 +136,11 @@ class GUI:
 
             self.entries.append((data_range_from_entry, data_range_to_entry, string_range_to_entry))
             self.dropdowns.append((data_type_dropdown, modification_dropdown))
+
+            data_range_from_entry.configure(state="disabled")
+            data_range_to_entry.configure(state="disabled")
+            string_range_to_entry.configure(state="disabled")
+            data_type_dropdown.configure(state="disabled")
 
         # Generate Button
         generate_button = ttk.Button(self.scrollable_frame, text="Generate",

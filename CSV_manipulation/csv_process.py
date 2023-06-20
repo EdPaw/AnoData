@@ -1,5 +1,6 @@
 import csv
 import random
+from datetime import datetime, timedelta
 
 
 class CSVProcessor:
@@ -51,6 +52,13 @@ class CSVProcessor:
                         random_value = random.uniform(float(data_range_from.replace(',', '.')),
                                                       float(data_range_to.replace(',', '.')))
                         row_data.append(str(random_value))
+
+                    elif column_type == "Date":
+                        data_range_from = datetime.strptime(data_range_from, "%Y-%m-%d %H:%M:%S")
+                        data_range_to = datetime.strptime(data_range_to, "%Y-%m-%d %H:%M:%S")
+
+                        random_value = data_range_from + timedelta(seconds=random.randint(0, int((data_range_to - data_range_from).total_seconds())))
+                        row_data.append(random_value)
 
                     elif column_type == "Bool":
                         random_value = str(random.choice([True, False]))

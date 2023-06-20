@@ -62,7 +62,6 @@ class CSVAnalyzer:
                 max_val = max(column_values)
                 min_val = min(column_values)
                 col_range = f"{min_val}#{max_val}"
-                print(col_range)
 
         elif column_type == bool:
             max_val = max(column_values)
@@ -107,14 +106,14 @@ class CSVAnalyzer:
 
             for col_index, col_name in enumerate(column_names):
                 column_values = [row[col_index] for row in data_rows]
-                print(column_values)
+                #print(column_values)
                 col_type = self.get_column_type(column_values[0], column_values)
                 col_example = column_values[0]
                 col_range = self.get_column_range(column_values)
                 col_range_from, col_range_to = col_range.split('#')
                 columns.append((col_name, col_type, col_example, col_range_from, col_range_to))
 
-            print(column_names)
-            print(columns)
+            #print(column_names)
+            #print(columns)
 
             return columns

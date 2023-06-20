@@ -1,4 +1,3 @@
-import csv_entry as c_e
 import gui as g
 
 
