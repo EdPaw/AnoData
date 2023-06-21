@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+import tkinter.messagebox as messagebox
 import os
 import csv
 from datetime import datetime
@@ -24,8 +25,10 @@ class CSVAnalyzer:
     def is_csv_file(file_path):
         file_name, file_extension = os.path.splitext(file_path)
         if not file_path:
+            messagebox.showerror("Error", "No file selected")
             raise FileNotFoundError("No file selected")
         if file_extension.lower() != '.csv':
+            messagebox.showerror("Error", "Wrong file type")
             raise TypeError("Wrong file type")
 
     @staticmethod

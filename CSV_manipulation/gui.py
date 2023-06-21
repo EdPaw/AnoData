@@ -3,6 +3,13 @@ from tkinter import ttk
 import datetime
 import csv_process as csv_p
 import csv_entry as csv_e
+import tkinter.messagebox as messagebox
+import sys
+
+
+def exit_program():
+    if messagebox.askokcancel("Exit", "Do you want to close the program?"):
+        sys.exit()
 
 
 class StartScreen:
@@ -34,7 +41,7 @@ class StartScreen:
         self.analyzer = None
         self.columns = None
         self.path = None
-
+        self.root.protocol("WM_DELETE_WINDOW", exit_program)
         self.root.mainloop()
 
     def handle_select_csv(self):
@@ -134,6 +141,9 @@ class GUI:
             # Set default value for Modification section
             modification_dropdown.current(modification_values.index("Remain as is"))
 
+            data_type_dropdown.bind("<<ComboboxSelected>>", self.handle_dropdown_change)
+            modification_dropdown.bind("<<ComboboxSelected>>", self.handle_dropdown_change)
+
             self.entries.append((data_range_from_entry, data_range_to_entry, string_range_to_entry))
             self.dropdowns.append((data_type_dropdown, modification_dropdown))
 
@@ -151,7 +161,42 @@ class GUI:
         self.result_label = ttk.Label(self.root, text="")
         self.result_label.pack()
 
+        self.root.protocol("WM_DELETE_WINDOW", exit_program)
         self.root.mainloop()
+
+    def handle_dropdown_change(self, event):
+        # Get the modified dropdown
+        dropdown = event.widget
+
+        # Find the corresponding Entry fields and Dropdown
+        for i, (data_type_dropdown, modification_dropdown) in enumerate(self.dropdowns):
+            if dropdown in (data_type_dropdown, modification_dropdown):
+                data_range_from_entry, data_range_to_entry, string_range_to_entry = self.entries[i]
+
+                # Enable or disable Entry fields based on the selected values in the dropdowns
+                modification = modification_dropdown.get()
+                data_type = data_type_dropdown.get()
+
+                if modification == "Draw from data range":
+                    data_type_dropdown.configure(state="normal")
+                    if data_type in ("Int", "Float", "Date", "Bool"):
+                        data_range_from_entry.configure(state="normal")
+                        data_range_to_entry.configure(state="normal")
+                        string_range_to_entry.configure(state="disabled")
+                    elif data_type == "String":
+                        data_range_from_entry.configure(state="disabled")
+                        data_range_to_entry.configure(state="disabled")
+                        string_range_to_entry.configure(state="normal")
+                    elif data_type == "Geo":
+                        data_range_from_entry.configure(state="disabled")
+                        data_range_to_entry.configure(state="disabled")
+                        string_range_to_entry.configure(state="disabled")
+                else:
+                    data_range_from_entry.configure(state="disabled")
+                    data_range_to_entry.configure(state="disabled")
+                    string_range_to_entry.configure(state="disabled")
+
+                break
 
     def get_user_choices(self, columns, path):
         user_choices = []  # List storing user choices

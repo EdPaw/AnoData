@@ -1,6 +1,7 @@
 import csv
 import random
 from datetime import datetime, timedelta
+import tkinter.messagebox as messagebox
 
 
 class CSVProcessor:
@@ -74,8 +75,12 @@ class CSVProcessor:
 
     @staticmethod
     def create_new_csv(modified_data):
-        with open("modified_data.csv", "w", newline="", encoding='utf-8') as csvfile:
-            writer = csv.writer(csvfile, delimiter=';')
-            writer.writerows(modified_data)
+        try:
+            with open("modified_data.csv", "w", newline="", encoding='utf-8') as csvfile:
+                writer = csv.writer(csvfile, delimiter=';')
+                writer.writerows(modified_data)
+                messagebox.showinfo("Success", "File generated")
+        except PermissionError:
+            messagebox.showinfo("Fail", "No permissions to save or file opened")
 
         return "modified_data.csv"
