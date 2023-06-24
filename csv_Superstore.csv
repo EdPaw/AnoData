@@ -1,0 +1,11 @@
+﻿Row ID;Order ID;Order Date;Country;City;Region;Product ID;Category;Sub-Category;Product Name;Finished;Sales;Quantity;Discount;Profit
+1;CA-2016-152156;08.11.2016;United States;Henderson;South;FUR-BO-10001798;Furniture;Bookcases;Bush Somerset Collection Bookcase;True;261,96;2;0;41,9136
+2;CA-2016-152156;08.11.2016;United States;Henderson;South;FUR-CH-10000454;Furniture;Chairs;Hon Deluxe Fabric Upholstered Stacking Chairs, Rounded Back;False;731,94;3;0;219,582
+3;CA-2016-138688;12.06.2016;United States;Los Angeles;West;OFF-LA-10000240;Office Supplies;Labels;Self-Adhesive Address Labels for Typewriters by Universal;False;14,62;2;0;6,8714
+4;US-2015-108966;11.10.2015;United States;Fort Lauderdale;South;FUR-TA-10000577;Furniture;Tables;Bretford CR4500 Series Slim Rectangular Table;True;957,5775;5;0,45;-383,031
+5;US-2015-108966;11.10.2015;United States;Fort Lauderdale;South;OFF-ST-10000760;Office Supplies;Storage;Eldon Fold 'N Roll Cart System;True;22,368;2;0,2;2,5164
+6;CA-2014-115812;09.06.2014;United States;Los Angeles;West;FUR-FU-10001487;Furniture;Furnishings;Eldon Expressions Wood and Plastic Desk Accessories, Cherry Wood;True;48,86;7;0;14,1694
+7;CA-2014-115812;09.06.2014;United States;Los Angeles;West;OFF-AR-10002833;Office Supplies;Art;Newell 322;False;7,28;4;0;1,9656
+8;CA-2014-115812;09.06.2014;United States;Los Angeles;West;TEC-PH-10002275;Technology;Phones;Mitel 5320 IP Phone VoIP phone;False;907,152;6;0,2;90,7152
+9;CA-2014-115812;09.06.2014;United States;Los Angeles;West;OFF-BI-10003910;Office Supplies;Binders;DXL Angle-View Binders with Locking Rings by Samsill;False;18,504;3;0,2;5,7825
+10;CA-2014-115812;09.06.2014;United States;Los Angeles;West;OFF-AP-10002892;Office Supplies;Appliances;Belkin F5C206VTEL 6 Outlet Surge;False;114,9;5;0;34,47
