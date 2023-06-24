@@ -14,14 +14,12 @@ class CSVProcessor:
             reader = csv.reader(csvfile)
             for row in reader:
                 rows += 1
-
         return rows
 
     def original_file_content(self):
         with open(self.file_path, 'r', encoding='utf-8') as csvfile:
             reader = csv.reader(csvfile, delimiter=';')
             rows = list(reader)
-
         return rows
 
     def process_data(self, column_choices):
@@ -58,7 +56,8 @@ class CSVProcessor:
                         data_range_from = datetime.strptime(data_range_from, "%Y-%m-%d %H:%M:%S")
                         data_range_to = datetime.strptime(data_range_to, "%Y-%m-%d %H:%M:%S")
 
-                        random_value = data_range_from + timedelta(seconds=random.randint(0, int((data_range_to - data_range_from).total_seconds())))
+                        random_value = data_range_from + timedelta(
+                            seconds=random.randint(0, int((data_range_to - data_range_from).total_seconds())))
                         row_data.append(random_value)
 
                     elif column_type == "Bool":
@@ -73,14 +72,14 @@ class CSVProcessor:
 
         return [column_names] + modified_data
 
-    @staticmethod
-    def create_new_csv(modified_data):
+    def create_new_csv(self, modified_data):
+        path = self.file_path.replace(".csv", "")
         try:
-            with open("modified_data.csv", "w", newline="", encoding='utf-8') as csvfile:
+            with open(f"{path}_AnoData.csv", "w", newline="", encoding='utf-8') as csvfile:
                 writer = csv.writer(csvfile, delimiter=';')
                 writer.writerows(modified_data)
                 messagebox.showinfo("Success", "File generated")
         except PermissionError:
             messagebox.showinfo("Fail", "No permissions to save or file opened")
 
-        return "modified_data.csv"
+        return f"{path}_AnoData.csv"

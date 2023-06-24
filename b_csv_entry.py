@@ -19,7 +19,8 @@ class CSVAnalyzer:
                     csv.reader(csvfile, delimiter=',')
                     break
             except (FileNotFoundError, TypeError) as e:
-                print(f"{e}")
+                # Error handled already
+                pass
 
     @staticmethod
     def is_csv_file(file_path):
@@ -38,6 +39,13 @@ class CSVAnalyzer:
         file_path = filedialog.askopenfilename()
         return file_path
 
+    @staticmethod
+    def min_max_val(column_values):
+        max_val = max(column_values)
+        min_val = min(column_values)
+        col_range = f"{min_val}#{max_val}"
+        return col_range
+
     def get_column_range(self, column_values):
         column_type = self.get_column_type(column_values[0], column_values)
 
@@ -48,28 +56,21 @@ class CSVAnalyzer:
             # Just in case of such lists: ['0', '0', '0', '0,45', '0,2', '0', '0', '0,2', '0,2', '0']
             column_values = [float(value.replace(',', '.')) for value in column_values]
             column_values = list(map(int, column_values))
-            max_val = max(column_values)
-            min_val = min(column_values)
-            col_range = f"{min_val}#{max_val}"
+            col_range = self.min_max_val(column_values)
 
         elif column_type == float:
             column_values = [float(value.replace(',', '.')) for value in column_values]
             column_values = list(map(float, column_values))
-            max_val = max(column_values)
-            min_val = min(column_values)
-            col_range = f"{min_val}#{max_val}"
+            col_range = self.min_max_val(column_values)
 
         elif column_type == datetime:
             column_values = [datetime.strptime(value, "%d.%m.%Y") for value in column_values]
             if column_values:
-                max_val = max(column_values)
-                min_val = min(column_values)
-                col_range = f"{min_val}#{max_val}"
+                col_range = self.min_max_val(column_values)
 
         elif column_type == bool:
-            max_val = max(column_values)
-            min_val = min(column_values)
-            col_range = f"{min_val}#{max_val}"
+            col_range = self.min_max_val(column_values)
+
         else:
             col_range = "Not applicable#Not applicable"
 
@@ -94,6 +95,7 @@ class CSVAnalyzer:
 
         if value.lower() in ['true', 'false']:
             return bool
+
         else:
             return str
 
@@ -106,17 +108,12 @@ class CSVAnalyzer:
             data_rows = rows[1:]
 
             columns = []
-
             for col_index, col_name in enumerate(column_names):
                 column_values = [row[col_index] for row in data_rows]
-                #print(column_values)
                 col_type = self.get_column_type(column_values[0], column_values)
                 col_example = column_values[0]
                 col_range = self.get_column_range(column_values)
                 col_range_from, col_range_to = col_range.split('#')
                 columns.append((col_name, col_type, col_example, col_range_from, col_range_to))
-
-            #print(column_names)
-            #print(columns)
 
             return columns

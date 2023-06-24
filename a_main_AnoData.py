@@ -1,8 +1,8 @@
-import gui as g
+import d_start_screen as ss
 
 
 def main():
-    g.StartScreen()
+    ss.StartScreen()
 
 
 if __name__ == '__main__':

@@ -1,56 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 import datetime
-import csv_process as csv_p
-import csv_entry as csv_e
-import tkinter.messagebox as messagebox
-import sys
-
-
-def exit_program():
-    if messagebox.askokcancel("Exit", "Do you want to close the program?"):
-        sys.exit()
-
-
-class StartScreen:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("AnoData")
-        self.root.geometry("400x300")
-        self.root.iconbitmap("letter-a.ico")
-
-        self.canvas = tk.Canvas(self.root, width=400, height=400)
-        self.canvas.pack()
-
-        image = tk.PhotoImage(file="background.png", master=self.canvas)
-        self.canvas.create_image(0, 0, anchor="nw", image=image)
-
-        # Calculate the center coordinates of the canvas
-        canvas_center_x = 400 // 2
-        canvas_center_y = 300 // 2
-
-        # Add label above the button
-        label = tk.Label(self.root, text="Program to anonymize your data. \nSelect CSV and input parameters.",
-                         background="#FFE1ED", font=("Calibri", 12), relief="sunken", width=30, height=3)
-        label.place(x=canvas_center_x, y=canvas_center_y-80, anchor="center")
-
-        # Add "Select CSV" button
-        select_csv_button = ttk.Button(self.root, text="Select CSV", command=self.handle_select_csv, width=20)
-        select_csv_button.place(x=canvas_center_x, y=canvas_center_y, anchor="center")
-
-        self.analyzer = None
-        self.columns = None
-        self.path = None
-        self.root.protocol("WM_DELETE_WINDOW", exit_program)
-        self.root.mainloop()
-
-    def handle_select_csv(self):
-        self.analyzer = csv_e.CSVAnalyzer()
-        self.columns = self.analyzer.describe_file()
-        self.path = self.analyzer.file_path
-
-        self.root.destroy()
-        GUI(self.columns, self.path)
+import c_csv_process as csv_p
+import d_start_screen as ss
 
 
 class GUI:
@@ -157,11 +109,9 @@ class GUI:
                                      command=lambda: self.get_user_choices(columns, path))
         generate_button.pack(pady=15)
 
-        # Result
         self.result_label = ttk.Label(self.root, text="")
         self.result_label.pack()
-
-        self.root.protocol("WM_DELETE_WINDOW", exit_program)
+        self.root.protocol("WM_DELETE_WINDOW", ss.exit_program)
         self.root.mainloop()
 
     def handle_dropdown_change(self, event):
@@ -183,10 +133,12 @@ class GUI:
                         data_range_from_entry.configure(state="normal")
                         data_range_to_entry.configure(state="normal")
                         string_range_to_entry.configure(state="disabled")
+
                     elif data_type == "String":
                         data_range_from_entry.configure(state="disabled")
                         data_range_to_entry.configure(state="disabled")
                         string_range_to_entry.configure(state="normal")
+
                     elif data_type == "Geo":
                         data_range_from_entry.configure(state="disabled")
                         data_range_to_entry.configure(state="disabled")
@@ -195,11 +147,10 @@ class GUI:
                     data_range_from_entry.configure(state="disabled")
                     data_range_to_entry.configure(state="disabled")
                     string_range_to_entry.configure(state="disabled")
-
                 break
 
     def get_user_choices(self, columns, path):
-        user_choices = []  # List storing user choices
+        user_choices = []
 
         # Collect user choices for each column
         for i, (column_name, column_type, _, _, _) in enumerate(columns):
@@ -211,10 +162,7 @@ class GUI:
 
             user_choices.append((column_name, data_type, data_range_from, data_range_to, string_range_to, modification))
 
-        print(user_choices)
-
         processor = csv_p.CSVProcessor(path)
-
         modified_data = processor.process_data(user_choices)
         processor.create_new_csv(modified_data)
 
